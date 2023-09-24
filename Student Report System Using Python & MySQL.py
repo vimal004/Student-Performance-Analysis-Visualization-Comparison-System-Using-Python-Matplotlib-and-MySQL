@@ -9,8 +9,10 @@ db_connection = mysql.connector.connect(
     database="Student"
 )
 cursor = db_connection.cursor()
+
 # Initialize empty lists to store student data
 students = []
+
 # Function to input student data
 def input_students():
     while True:
@@ -25,6 +27,7 @@ def input_students():
             students.append({'name': name, 'math': math, 'physics': physics, 'chemistry': chemistry, 'attendance': att})
         except ValueError:
             print("Invalid input. Please enter valid data.")
+
 # Function to display student data
 def show_student_data(students):
     if not students:
@@ -168,6 +171,23 @@ def compare_performance(students, student_name=None):
         plt.tight_layout()
         plt.show()
 
+# Function to analyze and plot an individual student's performance in a subject
+def analyze_individual_performance(student, subject):
+    if subject not in ['math', 'physics', 'chemistry']:
+        print(f"Invalid subject: {subject}. Subject must be 'math', 'physics', or 'chemistry'.")
+        return
+
+    subject_scores = student[subject]
+    test_numbers = ['Test 1', 'Test 2', 'Test 3']
+
+    plt.figure(figsize=(8, 5))
+    plt.bar(test_numbers, subject_scores, color='skyblue')
+    plt.xlabel('Tests')
+    plt.ylabel('Marks')
+    plt.title(f'{subject.capitalize()} Performance for {student["name"]}')
+    plt.ylim(0, 100)  # Adjust the y-axis limits if needed
+    plt.show()
+
 # Main program loop
 while True:
     print("\nStudent Tracker Menu:")
@@ -198,7 +218,9 @@ while True:
     elif choice == '6':
         calculate_cgpa(students)
     elif choice == '7':
-        analyze_performance(students)
+        student_name = input("Enter student name to analyze performance: ")
+        subject = input("Enter subject to analyze (math/physics/chemistry): ")
+        analyze_individual_performance(student, subject)
     elif choice == '8':
         student_name = input("Enter student name to compare performance: ")
         compare_performance(students, student_name)
